@@ -51,40 +51,63 @@ def login(request):
         return JsonResponse({'error': 'Invalid request method'}, status=405) 
 
 
+def job_flow(stu = None):
+
+    if stu is None:
+        job_objects = Job.objects.all()
+    else:
+        job_objects = stu.view_applied_jobs()
+
+    job_list = []
+    for job in job_objects:
+        job_dict = {
+            'job_id': job.id,
+            'job_number': job.job_number,
+            'is_approved': job.is_approved,
+            'job_title': job.job_title,
+            'job_content': job.job_content,
+            'salary': job.salary,
+            'feedback': job.feedback
+            # Add other fields as needed
+        }
+        job_list.append(job_dict)
+    return job_list
+
 
 """
 APIs for students
 """
 def student_load_related_jobs(request, student_id):
-    if request.method == 'POST':
+    if request.method == 'GET':
         # find the student obj according to this student_id
         try:
-            student = Student.objects.get(student_id=student_id)
-            return JsonResponse(student.view_applied_jobs())
+            # B: find all jobs objs that are related to this student
+            stu = Student.objects.get(student_id=student_id)
+            return JsonResponse(job_flow(stu=stu), safe=False)
         except Student.DoesNotExist:
             return JsonResponse({'error': 'Invalid student_id'}, status=400)
-    # B: find all jobs objs that are related to this student
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405) 
-    
+
+
 def student_load_unrelated_jobs(request, student_id):
-    if request.method == 'POST':
+    if request.method == 'GET':
         try:
             # find the student obj according to this student_id
-            student = Student.objects.get(student_id=student_id)
+            stu = Student.objects.get(student_id=student_id)
 
             # A: find all jobs objs
-            A = Job.objects.all()
-
+            job_all = job_flow()
             # B: find all jobs objs that are related to this student
-            B = student.view_applied_jobs()
-
+            job_rel = job_flow(stu)
             # return A-B
-            return JsonResponse(A.difference(B))
+            job_unrel = [item for item in job_all if item not in job_rel]
+            return JsonResponse(job_unrel, safe=False)
         except Student.DoesNotExist:
             return JsonResponse({'error': 'Invalid student_id'}, status=400)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405) 
+
 
 def student_update_infos(request, student_id, student_json):
 
@@ -92,6 +115,7 @@ def student_update_infos(request, student_id, student_json):
 
     # call update self_infos
     pass
+
 
 def student_apply_for_job(request, job_id, student_id):
 
