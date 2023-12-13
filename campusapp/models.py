@@ -62,7 +62,7 @@ class Student(models.Model):
         try:
             # 尝试通过用户名和密码查找辅导员
             login_record = Login.objects.get(username=username, password=password, user_type=Login.STUDENT)
-            student = cls.objects.get(name=login_record.user_name, contact_number=login_record.user_password)
+            student = cls.objects.get(student_id=login_record.user_id)
             return student
         except (Login.DoesNotExist, cls.DoesNotExist):
             # 如果未找到匹配的记录，返回 None 表示登录失败
@@ -178,7 +178,7 @@ class Counselor(models.Model):
         try:
             # 尝试通过用户名和密码查找辅导员
             login_record = Login.objects.get(username=username, password=password, user_type=Login.COUNSELOR)
-            counselor = cls.objects.get(name=login_record.user_name, contact_number=login_record.user_password)
+            counselor = cls.objects.get(employee_id=login_record.user_id)
             return counselor
         except (Login.DoesNotExist, cls.DoesNotExist):
             # 如果未找到匹配的记录，返回 None 表示登录失败
@@ -283,7 +283,7 @@ class Employer(models.Model):
         try:
             # 尝试通过用户名和密码查找辅导员
             login_record = Login.objects.get(username=username, password=password, user_type=Login.EMPLOYER)
-            employer = cls.objects.get(name=login_record.user_name, contact_number=login_record.user_password)
+            employer = cls.objects.get(employer_id=login_record.user_id)
             return employer
         except (Login.DoesNotExist, cls.DoesNotExist):
             # 如果未找到匹配的记录，返回 None 表示登录失败
@@ -380,7 +380,7 @@ class WorkStudyAdmin(models.Model):
         try:
             # 尝试通过用户名和密码查找辅导员
             login_record = Login.objects.get(username=username, password=password, user_type=Login.WORK_STUDY_ADMIN)
-            work_study_admin = cls.objects.get(name=login_record.user_name, contact_number=login_record.user_password)
+            work_study_admin = cls.objects.get(work_admin_id=login_record.user_id)
             return work_study_admin
         except (Login.DoesNotExist, cls.DoesNotExist):
             # 如果未找到匹配的记录，返回 None 表示登录失败
@@ -470,7 +470,7 @@ class StudentAffair(models.Model):
         try:
             # 尝试通过用户名和密码查找辅导员
             login_record = Login.objects.get(username=username, password=password, user_type=Login.STUDENT_AFFAIRS)
-            stu_affair = cls.objects.get(name=login_record.user_name, contact_number=login_record.user_password)
+            stu_affair = cls.objects.get(stu_admin_id=login_record.user_id)
             return stu_affair
         except (Login.DoesNotExist, cls.DoesNotExist):
             # 如果未找到匹配的记录，返回 None 表示登录失败
@@ -554,6 +554,7 @@ class Login(models.Model):
     - user_password (CharField): 用户密码，最大长度为100个字符。
     - user_type (CharField): 用户类型，使用 choices 参数限制为预定义的用户类型，包括学生、辅导员、用人单位、
             勤工俭学管理员和学生处管理员。
+    - user_id (CharField): 用户id，存储对应的用户在相关的表中所属的id，默认值为0000，最大长度为10个字符
 
     方法:
     - __str__(self): 返回登录信息对象的字符串表示形式。
@@ -565,11 +566,11 @@ class Login(models.Model):
     # 获取用户类型的显示名称
     user_type_display = login_record.get_user_type_display()
     """
-    STUDENT = 0
-    COUNSELOR = 1
-    EMPLOYER = 2
-    WORK_STUDY_ADMIN = 3
-    STUDENT_AFFAIRS = 4
+    STUDENT = 'Student'
+    COUNSELOR = 'Counselor'
+    EMPLOYER = 'Employer'
+    WORK_STUDY_ADMIN = 'Work Study Admin'
+    STUDENT_AFFAIRS = 'Student Affairs'
 
     USER_TYPES = [
         (STUDENT, 'Student'),
@@ -581,6 +582,7 @@ class Login(models.Model):
     user_name = models.CharField(max_length=30, unique=True)
     user_password = models.CharField(max_length=100)
     user_type = models.CharField(max_length=20, choices=USER_TYPES)
+    user_id = models.CharField(max_length=10, default='0000')
 
     def __str__(self):
         return f"{self.user_name} ({self.get_user_type_display()})"
