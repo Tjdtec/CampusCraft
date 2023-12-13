@@ -79,7 +79,7 @@ def student_affair_load_infos(request, d):
 
 def work_study_admin_load_infos(request, id):
 
-    work_study_admin = WorkStudyAdmin.objects.get(work_admin_id=d)
+    work_study_admin = WorkStudyAdmin.objects.get(work_admin_id=id)
     return JsonResponse(work_study_admin.view_work_study_admin_info())
 
 def job_flow(stu = None):
