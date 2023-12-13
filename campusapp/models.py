@@ -61,7 +61,7 @@ class Student(models.Model):
             """
         try:
             # 尝试通过用户名和密码查找辅导员
-            login_record = Login.objects.get(username=username, password=password, user_type=Login.STUDENT)
+            login_record = Login.objects.get(user_name=username, user_password=password, user_type=Login.STUDENT)
             student = cls.objects.get(student_id=login_record.user_id)
             return student
         except (Login.DoesNotExist, cls.DoesNotExist):
@@ -177,7 +177,7 @@ class Counselor(models.Model):
         """
         try:
             # 尝试通过用户名和密码查找辅导员
-            login_record = Login.objects.get(username=username, password=password, user_type=Login.COUNSELOR)
+            login_record = Login.objects.get(user_name=username, user_password=password, user_type=Login.COUNSELOR)
             counselor = cls.objects.get(employee_id=login_record.user_id)
             return counselor
         except (Login.DoesNotExist, cls.DoesNotExist):
@@ -282,7 +282,7 @@ class Employer(models.Model):
            """
         try:
             # 尝试通过用户名和密码查找辅导员
-            login_record = Login.objects.get(username=username, password=password, user_type=Login.EMPLOYER)
+            login_record = Login.objects.get(user_name=username, user_password=password, user_type=Login.EMPLOYER)
             employer = cls.objects.get(employer_id=login_record.user_id)
             return employer
         except (Login.DoesNotExist, cls.DoesNotExist):
@@ -379,7 +379,7 @@ class WorkStudyAdmin(models.Model):
            """
         try:
             # 尝试通过用户名和密码查找辅导员
-            login_record = Login.objects.get(username=username, password=password, user_type=Login.WORK_STUDY_ADMIN)
+            login_record = Login.objects.get(user_name=username, user_password=password, user_type=Login.WORK_STUDY_ADMIN)
             work_study_admin = cls.objects.get(work_admin_id=login_record.user_id)
             return work_study_admin
         except (Login.DoesNotExist, cls.DoesNotExist):
@@ -469,7 +469,7 @@ class StudentAffair(models.Model):
            """
         try:
             # 尝试通过用户名和密码查找辅导员
-            login_record = Login.objects.get(username=username, password=password, user_type=Login.STUDENT_AFFAIRS)
+            login_record = Login.objects.get(user_name=username, user_password=password, user_type=Login.STUDENT_AFFAIRS)
             stu_affair = cls.objects.get(stu_admin_id=login_record.user_id)
             return stu_affair
         except (Login.DoesNotExist, cls.DoesNotExist):
