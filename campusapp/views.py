@@ -32,7 +32,7 @@ def login(request):
                 return JsonResponse(counselor_info)
             if student_affair:
                 student_affair_info = student_affair.view_student_affair_info()
-                student_affair_info["role"] = "counselor"
+                student_affair_info["role"] = "student_affair"
                 return JsonResponse(student_affair_info)
             if employer:
                 employer_info = employer.view_employer_info()
@@ -101,6 +101,12 @@ def student_apply_for_job(request, job_id, student_id):
 
     # call job's insert_student function
     pass 
+
+def student_load_infos(request, student_id):
+
+    student = Student.objects.get(student_id=student_id)
+    return JsonResponse(student.view_student_info())
+    
     
 """
 APIs for 'Counselor' or 'Assists' or 'fu_dao_yuan'
