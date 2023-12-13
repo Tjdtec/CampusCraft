@@ -1,0 +1,38 @@
+@startuml  
+skin rose
+actor 学生 #Red/Blue
+boundary "：学生管理界面" #Red/Blue
+control "：数据访问层" #Red/Blue
+entity "：学生信息" #Red/Blue
+entity "：岗位信息" #Red/Blue
+entity "：企业信息" #Red/Blue
+skinparam sequenceParticipant underline
+hide footbox
+opt 更新简介
+学生 -> "：学生管理界面" : 输入简介
+activate 学生
+activate "：学生管理界面"
+"：学生管理界面" -> "：数据访问层" : 提交简介
+activate "：数据访问层"
+"：数据访问层" -> "：学生信息" : 提交简介
+activate "：学生信息"
+"：学生信息" --> "：数据访问层" : 返回true
+deactivate "：学生信息"
+"：数据访问层" --> "：学生管理界面" : 返回true
+"：学生管理界面" --> "学生" : 显示更新成功
+
+else 投递岗位
+学生 -> "：学生管理界面" : 点击投递
+"：学生管理界面" -> "：数据访问层" : 提交企业信息
+"：数据访问层" -> "：企业信息" : 在企业信息中查找岗位
+activate "：企业信息"
+"：企业信息" --> "：数据访问层" : 返回true
+deactivate "：企业信息"
+"：数据访问层" -> "：岗位信息" : 在该企业的岗位中添加学生
+activate "：岗位信息"
+"：岗位信息" --> "：数据访问层" : 返回true
+deactivate "：岗位信息"
+"：数据访问层" --> "：学生管理界面" : 返回true
+"：学生管理界面" --> "学生" : 显示投递成功
+end
+@enduml

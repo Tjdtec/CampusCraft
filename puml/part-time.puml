@@ -1,0 +1,46 @@
+@startuml  
+skin rose
+actor 勤工处 #Red/Blue
+boundary "：勤工处管理界面" #Red/Blue
+boundary "：学生信息弹窗" #Red/Blue
+control "：数据访问层" #Red/Blue
+entity "：学生信息" #Red/Blue
+entity "：岗位信息" #Red/Blue
+skinparam sequenceParticipant underline
+hide footbox
+opt 审核岗位
+勤工处 -> "：勤工处管理界面" : 点击审核上限
+activate 勤工处
+activate "：勤工处管理界面"
+"：勤工处管理界面" -> "：数据访问层" : 提出审核上线请求
+activate "：数据访问层"
+"：数据访问层" -> "：岗位信息" : 过审标志位置1
+activate "：岗位信息"
+"：岗位信息" --> "：数据访问层" : 返回true
+deactivate "：岗位信息" 
+"：数据访问层" --> "：勤工处管理界面" : 返回true
+"：勤工处管理界面" --> "勤工处" : 显示审核通过
+else 查看学生信息
+勤工处 -> "：勤工处管理界面" : 点击查看学生详情按钮
+"：勤工处管理界面" -> "：学生信息弹窗" : 提出显示请求
+activate "：学生信息弹窗"
+
+"：学生信息弹窗" -> "：数据访问层" : 根据学号请求访问学生用户信息
+
+"：数据访问层" -> "：学生信息" : 根据学号请求访问学生用户信息
+
+activate "：学生信息"
+"：学生信息" --> "：数据访问层" : 返回学生用户信息
+deactivate "：学生信息"
+
+"：数据访问层" --> "：学生信息弹窗" : 返回学生用户信息
+
+"：学生信息弹窗" --> "勤工处" : 显示学生用户信息
+
+opt 退出弹窗
+"：学生信息弹窗" --> "：勤工处管理界面" : 返回
+destroy "：学生信息弹窗"
+end
+
+end
+@enduml
