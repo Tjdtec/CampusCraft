@@ -43,13 +43,44 @@ def login(request):
                 work_study_admin_info["role"] = "work_study_admin"
                 return JsonResponse(work_study_admin_info)
             
-            return JsonResponse({'error': 'no_match'}, status=400)
+            return JsonResponse({'error': 'no match'}, status=400)
             
         except Login.DoesNotExist:
-            return JsonResponse({'error': 'Invalid username or password'}, status=400)
+            return JsonResponse({'error': 'Invalid shits'}, status=400)
     else:
-        return JsonResponse({'error': 'Invalid request method'}, status=405) 
+        return JsonResponse({'error': 'WTF?'}, status=405) 
 
+"""
+General APIs
+"""
+
+# Pass-in IDs into these motherfuckers 
+# next, according to that, return the information of that shit
+
+def student_load_infos(request, id):
+
+    student = Student.objects.get(student_id=id)
+    return JsonResponse(student.view_student_info())
+
+def counselor_load_infos(request, id):
+
+    counselor = Counselor.objects.get(employee_id=id)
+    return JsonResponse(counselor.view_counselor_info())
+
+def employer_load_infos(request, id):
+
+    employer = Employer.objects.get(employer_id=id)
+    return JsonResponse(employer.view_employer_info())
+
+def student_affair_load_infos(request, d):
+
+    student_affair = StudentAffair.objects.get(stu_admin_id=id)
+    return JsonResponse(student_affair.view_student_affair_info())
+
+def work_study_admin_load_infos(request, id):
+
+    work_study_admin = WorkStudyAdmin.objects.get(work_admin_id=d)
+    return JsonResponse(work_study_admin.view_work_study_admin_info())
 
 
 """
@@ -102,10 +133,7 @@ def student_apply_for_job(request, job_id, student_id):
     # call job's insert_student function
     pass 
 
-def student_load_infos(request, student_id):
 
-    student = Student.objects.get(student_id=student_id)
-    return JsonResponse(student.view_student_info())
     
     
 """
