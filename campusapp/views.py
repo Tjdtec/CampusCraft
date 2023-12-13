@@ -6,9 +6,10 @@ import os
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .models import Login
+from .models import Login, StudentAffair, WorkStudyAdmin, Employer, Student, Counselor
 from django.http import JsonResponse
 
+@csrf_exempt
 def login(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -16,11 +17,9 @@ def login(request):
         password = data.get('password')
 
         try:
-            login_record = Login.objects.get(user_name=username, user_password=password)
-            response_data = {
-                'user_identifier': login_record.get_user_type_display()
-            }
-            return JsonResponse(response_data)
+            student = Student.login(username, password)
+            return JsonResponse(student.view_student_info())
+            
         except Login.DoesNotExist:
             return JsonResponse({'error': 'Invalid username or password'}, status=400)
     else:
