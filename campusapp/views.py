@@ -151,11 +151,12 @@ def student_update_infos(request, student_id, student_json):
 def student_apply_for_job(request, job_id, student_id):
 
     # find student obj according to student_id
-
+    stu = Student.objects.get(student_id=student_id)
     # find job obj according to job_id
-
+    job = Job.objects.get(job_number=job_id)
     # call job's insert_student function
-    pass 
+    stu.apply_for_job(job)
+    return JsonResponse({'success':'happy~'})
 
 
     

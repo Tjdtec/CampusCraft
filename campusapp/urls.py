@@ -25,4 +25,7 @@ urlpatterns = [
 
     path('student_load_unrelated_jobs/<str:student_id>'
          ,views.student_load_unrelated_jobs, name='student_load_unrelated_jobs'),
+
+    path('student_apply_for_job/<str:job_id>/<str:student_id>'
+         ,views.student_apply_for_job, name='student_apply_for_job'),
 ]
