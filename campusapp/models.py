@@ -187,6 +187,13 @@ class Counselor(models.Model):
     def get_students(self):
         # 获取与该辅导员专业相同的学生
         return Student.objects.filter(major=self.major)
+    
+    def view_counselor_info(self):
+        return{
+            "employee_id": self.employee_id,
+            "major": self.major,
+            "name": self.name
+        }
 
 
 class Job(models.Model):
@@ -335,6 +342,15 @@ class Employer(models.Model):
 
     def __str__(self):
         return f"{self.employer_name} ({self.employer_id})"
+    
+
+    def view_employer_info(self):
+        return{
+
+            "employer_id": self.employer_id,
+            "employer_name": self.employer_name,
+            "contact_number": self.contact_number
+        }
 
 
 class WorkStudyAdmin(models.Model):
@@ -410,6 +426,12 @@ class WorkStudyAdmin(models.Model):
 
     def __str__(self):
         return f"{self.work_admin_name} ({self.work_admin_id})"
+    
+    def view_work_study_admin_info(self):
+        return{
+            "work_admin_id": self.work_admin_id,
+            "work_admin_name": self.work_admin_name
+        }
 
 
 class StudentAffair(models.Model):
@@ -540,6 +562,12 @@ class StudentAffair(models.Model):
             return True
         except Student.DoesNotExist:
             return False
+
+    def view_student_affair_info(self):
+        return{
+            'stu_admin_id': self.stu_admin_id,
+            'stu_admin_name': self.stu_admin_name
+        }
 
     def __str__(self):
         return f"{self.stu_admin_name} ({self.stu_admin_id})"

@@ -6,7 +6,7 @@ import os
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .models import Login, StudentAffair, WorkStudyAdmin, Employer, Student, Counselor
+from .models import Login, StudentAffair, WorkStudyAdmin, Employer, Student, Counselor, Job
 from django.http import JsonResponse
 
 @csrf_exempt
@@ -18,7 +18,32 @@ def login(request):
 
         try:
             student = Student.login(username, password)
-            return JsonResponse(student.view_student_info())
+            counselor = Counselor.login(username, password)
+            employer = Employer.login(username, password)
+            student_affair = StudentAffair.login(username, password)
+            work_study_admin = WorkStudyAdmin.login(username, password)
+            if student:
+                student_info = student.view_student_info()
+                student_info["role"] = "student"
+                return JsonResponse(student_info)
+            if counselor:
+                counselor_info = counselor.view_counselor_info()
+                counselor_info["role"] = "counselor"
+                return JsonResponse(counselor_info)
+            if student_affair:
+                student_affair_info = student_affair.view_student_affair_info()
+                student_affair_info["role"] = "counselor"
+                return JsonResponse(student_affair_info)
+            if employer:
+                employer_info = employer.view_employer_info()
+                employer_info["role"] = "employer"
+                return JsonResponse(employer_info)
+            if work_study_admin:
+                work_study_admin_info = work_study_admin.view_work_study_admin_info()
+                work_study_admin_info["role"] = "work_study_admin"
+                return JsonResponse(work_study_admin_info)
+            
+            return JsonResponse({'error': 'no_match'}, status=400)
             
         except Login.DoesNotExist:
             return JsonResponse({'error': 'Invalid username or password'}, status=400)
