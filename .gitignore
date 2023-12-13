@@ -6,6 +6,8 @@ __pycache__
 db.sqlite3
 media
 
+campusapp/migrations/__pycache__
+CampusCraft/__pycache__
 
 
 # Backup files # 
