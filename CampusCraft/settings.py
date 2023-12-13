@@ -25,12 +25,13 @@ SECRET_KEY = "django-insecure-xlg3_*00nyeu&ln_1f4h0ds7b$+zc&elu^(ioi9_1szxd@57z-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     "campusapp.apps.CampusappConfig",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -48,6 +49,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = "CampusCraft.urls"
