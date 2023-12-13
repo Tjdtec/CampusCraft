@@ -34,6 +34,9 @@ APIs for students
 
 def student_load_related_jobs(request, student_id):
 
+
+    # find the student obj according to this student_id
+
     # B: find all jobs objs that are related to this student
 
     # return B
@@ -41,6 +44,8 @@ def student_load_related_jobs(request, student_id):
     pass
 
 def student_load_unrelated_jobs(request, student_id):
+
+    # find the student obj according to this student_id
 
     # A: find all jobs objs
 
