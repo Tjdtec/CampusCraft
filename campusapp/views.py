@@ -72,7 +72,7 @@ def employer_load_infos(request, id):
     employer = Employer.objects.get(employer_id=id)
     return JsonResponse(employer.view_employer_info())
 
-def student_affair_load_infos(request, d):
+def student_affair_load_infos(request, id):
 
     student_affair = StudentAffair.objects.get(stu_admin_id=id)
     return JsonResponse(student_affair.view_student_affair_info())
@@ -184,7 +184,7 @@ def assists_get_brief(request, major_name):
 
     pass
 
-
+#VIP
 def assists_get_students(request, major_name):
     
     # filter all students of a given major
@@ -202,7 +202,7 @@ APIs for StuAdmins or StudentAffair
 #  Okay.... just reuse the Student's student_update_infos() function
 
 
-
+#VIP
 def stu_admin_create_student(request, student_json):
 
     # just like it's name says....
@@ -251,7 +251,7 @@ def job_manager_approve_job(request, job_manager_id, job_number):
 
     pass
 
-
+#VIP
 def job_manager_load_jobs(request,job_manager_id):
 
     # find all jobs
@@ -261,6 +261,14 @@ def job_manager_load_jobs(request,job_manager_id):
 
 
 """
-APIs for job card
+APIs for company or Employer
 """
+
+#VIP
+def make_new_job(request,job_json):
+
+    pass
+
+
+
 

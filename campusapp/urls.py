@@ -19,4 +19,10 @@ urlpatterns = [
 
     path('get_work_study_admin_by_id/<str:id>'
          ,views.work_study_admin_load_infos, name='work_study_admin_load_infos'),
+
+    path('student_load_related_jobs/<str:student_id>'
+         ,views.student_load_related_jobs, name='student_load_related_jobs'),
+
+    path('student_load_unrelated_jobs/<str:student_id>'
+         ,views.student_load_unrelated_jobs, name='student_load_unrelated_jobs'),
 ]
