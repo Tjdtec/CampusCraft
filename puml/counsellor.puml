@@ -1,0 +1,31 @@
+@startuml  
+skin rose
+actor 辅导员 #Red/Blue
+boundary "：辅导员管理界面" #Red/Blue
+boundary "：学生信息弹窗" #Red/Blue
+control "：数据访问层" #Red/Blue
+entity "：学生信息" #Red/Blue
+skinparam sequenceParticipant underline
+hide footbox
+opt 查看学生详情
+辅导员 -> "：辅导员管理界面" : 点击详情按钮
+activate 辅导员
+activate "：辅导员管理界面"
+"：辅导员管理界面" -> "：学生信息弹窗" : 提出显示请求
+activate "：学生信息弹窗"
+"：学生信息弹窗" -> "：数据访问层" : 根据学号请求访问学生用户信息
+activate "：数据访问层"
+"：数据访问层" -> "：学生信息" : 根据学号请求访问学生用户信息
+
+activate "：学生信息"
+"：学生信息" --> "：数据访问层" : 返回学生用户信息
+deactivate "：学生信息"
+"：数据访问层" --> "：学生信息弹窗" : 返回学生用户信息
+deactivate "：数据访问层"
+"：学生信息弹窗" --> "辅导员" : 显示学生用户信息
+end
+opt 退出弹窗
+"：学生信息弹窗" --> "：辅导员管理界面" : 返回
+destroy "：学生信息弹窗"
+end
+@enduml  
