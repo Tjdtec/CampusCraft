@@ -34,26 +34,26 @@ APIs for students
 
 def student_load_related_jobs(request, student_id):
 
-
     # find the student obj according to this student_id
+    student = Student.objects.get(student_id=student_id)
 
     # B: find all jobs objs that are related to this student
 
-    # return B
-
-    pass
+    return student.view_applied_jobs()
 
 def student_load_unrelated_jobs(request, student_id):
 
     # find the student obj according to this student_id
+    student = Student.objects.get(student_id=student_id)
 
     # A: find all jobs objs
+    A = Job.objects.all()
 
     # B: find all jobs objs that are related to this student
+    B = student.view_applied_jobs()
 
     # return A-B
-
-    pass
+    return A.difference(B)
 
 def student_update_infos(request, student_id, student_json):
 
