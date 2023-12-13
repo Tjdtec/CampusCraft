@@ -55,29 +55,36 @@ def login(request):
 """
 APIs for students
 """
-
 def student_load_related_jobs(request, student_id):
-
-    # find the student obj according to this student_id
-    student = Student.objects.get(student_id=student_id)
-
+    if request.method == 'POST':
+        # find the student obj according to this student_id
+        try:
+            student = Student.objects.get(student_id=student_id)
+            return JsonResponse(student.view_applied_jobs())
+        except Student.DoesNotExist:
+            return JsonResponse({'error': 'Invalid student_id'}, status=400)
     # B: find all jobs objs that are related to this student
-
-    return student.view_applied_jobs()
-
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405) 
+    
 def student_load_unrelated_jobs(request, student_id):
+    if request.method == 'POST':
+        try:
+            # find the student obj according to this student_id
+            student = Student.objects.get(student_id=student_id)
 
-    # find the student obj according to this student_id
-    student = Student.objects.get(student_id=student_id)
+            # A: find all jobs objs
+            A = Job.objects.all()
 
-    # A: find all jobs objs
-    A = Job.objects.all()
+            # B: find all jobs objs that are related to this student
+            B = student.view_applied_jobs()
 
-    # B: find all jobs objs that are related to this student
-    B = student.view_applied_jobs()
-
-    # return A-B
-    return A.difference(B)
+            # return A-B
+            return JsonResponse(A.difference(B))
+        except Student.DoesNotExist:
+            return JsonResponse({'error': 'Invalid student_id'}, status=400)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405) 
 
 def student_update_infos(request, student_id, student_json):
 
