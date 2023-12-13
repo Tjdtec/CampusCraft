@@ -60,10 +60,16 @@ class Student(models.Model):
                 print("登录失败，请检查用户名和密码。")
             """
         try:
+<<<<<<< HEAD
             # 尝试通过用户名和密码查找
             login_record = Login.objects.get(user_name=username, user_password=password, user_type=Login.STUDENT)
             # student = cls.objects.get(name=login_record.user_name, contact_number=login_record.user_password)
             student = cls.objects.get(name=login_record.user_name)
+=======
+            # 尝试通过用户名和密码查找辅导员
+            login_record = Login.objects.get(user_name=username, user_password=password, user_type=Login.STUDENT)
+            student = cls.objects.get(student_id=login_record.user_id)
+>>>>>>> refs/remotes/origin/main
             return student
         except (Login.DoesNotExist, cls.DoesNotExist):
             # 如果未找到匹配的记录，返回 None 表示登录失败
@@ -179,8 +185,13 @@ class Counselor(models.Model):
         """
         try:
             # 尝试通过用户名和密码查找辅导员
+<<<<<<< HEAD
             login_record = Login.objects.get(username=username, password=password, user_type=Login.COUNSELOR)
             counselor = cls.objects.get(name=login_record.user_name, contact_number=login_record.user_password)
+=======
+            login_record = Login.objects.get(user_name=username, user_password=password, user_type=Login.COUNSELOR)
+            counselor = cls.objects.get(employee_id=login_record.user_id)
+>>>>>>> refs/remotes/origin/main
             return counselor
         except (Login.DoesNotExist, cls.DoesNotExist):
             # 如果未找到匹配的记录，返回 None 表示登录失败
@@ -289,8 +300,13 @@ class Employer(models.Model):
            """
         try:
             # 尝试通过用户名和密码查找辅导员
+<<<<<<< HEAD
             login_record = Login.objects.get(username=username, password=password, user_type=Login.EMPLOYER)
             employer = cls.objects.get(name=login_record.user_name, contact_number=login_record.user_password)
+=======
+            login_record = Login.objects.get(user_name=username, user_password=password, user_type=Login.EMPLOYER)
+            employer = cls.objects.get(employer_id=login_record.user_id)
+>>>>>>> refs/remotes/origin/main
             return employer
         except (Login.DoesNotExist, cls.DoesNotExist):
             # 如果未找到匹配的记录，返回 None 表示登录失败
@@ -386,8 +402,13 @@ class WorkStudyAdmin(models.Model):
            """
         try:
             # 尝试通过用户名和密码查找辅导员
+<<<<<<< HEAD
             login_record = Login.objects.get(username=username, password=password, user_type=Login.WORK_STUDY_ADMIN)
             work_study_admin = cls.objects.get(name=login_record.user_name, contact_number=login_record.user_password)
+=======
+            login_record = Login.objects.get(user_name=username, user_password=password, user_type=Login.WORK_STUDY_ADMIN)
+            work_study_admin = cls.objects.get(work_admin_id=login_record.user_id)
+>>>>>>> refs/remotes/origin/main
             return work_study_admin
         except (Login.DoesNotExist, cls.DoesNotExist):
             # 如果未找到匹配的记录，返回 None 表示登录失败
@@ -478,8 +499,13 @@ class StudentAffair(models.Model):
            """
         try:
             # 尝试通过用户名和密码查找辅导员
+<<<<<<< HEAD
             login_record = Login.objects.get(username=username, password=password, user_type=Login.STUDENT_AFFAIRS)
             stu_affair = cls.objects.get(name=login_record.user_name, contact_number=login_record.user_password)
+=======
+            login_record = Login.objects.get(user_name=username, user_password=password, user_type=Login.STUDENT_AFFAIRS)
+            stu_affair = cls.objects.get(stu_admin_id=login_record.user_id)
+>>>>>>> refs/remotes/origin/main
             return stu_affair
         except (Login.DoesNotExist, cls.DoesNotExist):
             # 如果未找到匹配的记录，返回 None 表示登录失败
