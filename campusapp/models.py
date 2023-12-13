@@ -224,51 +224,49 @@ class Job(models.Model):
 
 
 class Employer(models.Model):
-    class Employer(models.Model):
-        """
-        用人单位类模型
+    """
+    用人单位类模型
 
-        属性:
-        - jobs_em_fk_2 (ManyToManyField): 工作外键，与该用人单位发布的工作相关联的工作集合。
-        - employer_id (CharField): 用人单位ID，最大长度为10个字符，必须唯一。
-        - employer_name (CharField): 用人单位名称，最大长度为100个字符。
-        - contact_number (CharField): 联系电话，最大长度为15个字符。
+    属性:
+    - jobs_em_fk_2 (ManyToManyField): 工作外键，与该用人单位发布的工作相关联的工作集合。
+    - employer_id (CharField): 用人单位ID，最大长度为10个字符，必须唯一。
+    - employer_name (CharField): 用人单位名称，最大长度为100个字符。
+     - contact_number (CharField): 联系电话，最大长度为15个字符。
 
-        方法:
-        - __str__(self): 返回用人单位对象的字符串表示形式。
-        - login(cls, username, password): 用于用人单位登录的类方法。
-        - create_job(self, job_data): 用于用人单位发布工作的方法。
-        - view_all_students(self): 用于用人单位查看所有学生信息的方法。
-        - view_applied_students(self): 用于用人单位查看投递了自己发布的所有工作岗位的学生的方法。
-        - view_all_jobs(self): 用于用人单位查看所有自己发布的工作的方法。
-        - provide_feedback(self, job_number, feedback_text): 用于用人单位填写某个工作岗位的反馈信息的方法。
+    方法:
+    - __str__(self): 返回用人单位对象的字符串表示形式。
+    - login(cls, username, password): 用于用人单位登录的类方法。
+    - create_job(self, job_data): 用于用人单位发布工作的方法。
+    - view_all_students(self): 用于用人单位查看所有学生信息的方法。
+    - view_applied_students(self): 用于用人单位查看投递了自己发布的所有工作岗位的学生的方法。
+    - view_all_jobs(self): 用于用人单位查看所有自己发布的工作的方法。
+    - provide_feedback(self, job_number, feedback_text): 用于用人单位填写某个工作岗位的反馈信息的方法。
 
-        使用样例:
-        employer = Employer(employer_id='123456', employer_name='ABC Company', contact_number='123-456-7890')
-        employer.save()
+    使用样例:
+    employer = Employer(employer_id='123456', employer_name='ABC Company', contact_number='123-456-7890')
+    employer.save()
 
-        # 登录用人单位
-        logged_in_employer = Employer.login(username='abc_company', password='secure_password')
+    # 登录用人单位
+    logged_in_employer = Employer.login(username='abc_company', password='secure_password')
 
-        # 发布工作
-        job_data = {'job_number': '789012', 'is_approved': False, 'job_title': 'Intern', 'job_content': 'Job description', 'salary': 1500}
-        new_job = logged_in_employer.create_job(job_data)
+    # 发布工作
+    job_data = {'job_number': '789012', 'is_approved': False, 'job_title': 'Intern', 'job_content': 'Job description', 'salary': 1500}
+    new_job = logged_in_employer.create_job(job_data)
 
-        # 查看所有学生信息
-        all_students = logged_in_employer.view_all_students()
+    # 查看所有学生信息
+    all_students = logged_in_employer.view_all_students()
 
-        # 查看投递了自己发布的所有工作岗位的学生
-        applied_students = logged_in_employer.view_applied_students()
+    # 查看投递了自己发布的所有工作岗位的学生
+    applied_students = logged_in_employer.view_applied_students()
 
-        # 查看所有自己发布的工作
-        all_jobs = logged_in_employer.view_all_jobs()
+    # 查看所有自己发布的工作
+    all_jobs = logged_in_employer.view_all_jobs()
 
-        # 提供反馈信息
-        job_number = '789012'
-        feedback_text = 'Great candidate!'
-        success = logged_in_employer.provide_feedback(job_number, feedback_text)
-        """
-
+    # 提供反馈信息
+    job_number = '789012'
+    feedback_text = 'Great candidate!'
+    success = logged_in_employer.provide_feedback(job_number, feedback_text)
+    """
     jobs_em_fk_2 = models.ManyToManyField(Job, blank=True)
     employer_id = models.CharField(max_length=10, unique=True)
     employer_name = models.CharField(max_length=100)
