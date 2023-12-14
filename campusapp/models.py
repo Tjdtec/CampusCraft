@@ -218,7 +218,7 @@ class Job(models.Model):
     job.save()
     print(job)
     """
-    student_job_fk = models.ManyToManyField(Student, blank=True)
+    student_job_fk = models.ManyToManyField(Student, related_name = "jobs", blank=True)
     job_number = models.CharField(max_length=10, unique=True)
     is_approved = models.BooleanField(default=False)
     job_title = models.CharField(max_length=100)
