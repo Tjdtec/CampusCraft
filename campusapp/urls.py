@@ -54,4 +54,7 @@ urlpatterns = [
 
     path('job_manager_load_jobs/<str:employer_id>'
          , views.job_manager_load_jobs, name='job_manager_load_jobs'),
+
+    path('assists_get_students/<str:major_name>'
+         , views.assists_get_students, name='major_name'), 
 ]
