@@ -236,11 +236,36 @@ def assists_get_brief(request, major_name):
 
 
 def assists_get_students(request, major_name):
-    # filter all students of a given major
+    """
+    Return a list of all students belonging to the given major.
+    """
+    if request.method == 'GET':
+        try:
+            # Query all students with the specified major
+            students = Student.objects.filter(major=major_name)
 
-    # return student list
+            # Extract relevant information for each student
+            student_list = [
+                {
+                    'name': student.name,
+                    'contact_number': student.contact_number,
+                    'introduction': student.introduction,
+                    'major': student.major,
+                    'class_name': student.class_name,
+                    'student_id': student.student_id,
+                }
+                for student in students
+            ]
 
-    pass
+            # return Json
+            return JsonResponse(student_list, safe=False)
+        except Exception as e:
+            # Print the exception message for debugging
+            print(f"Exception: {str(e)}")
+            # Reraise the exception to get more details in the console or Django error page
+            raise e
+    else:
+        return JsonResponse({'error': 'WTF?'}, status=405)
 
 
 """
