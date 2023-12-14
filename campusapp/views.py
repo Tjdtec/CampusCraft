@@ -433,6 +433,24 @@ def job_manager_load_jobs(request, job_manager_id):
 
     return JsonResponse(jobs_list, safe=False)
 
+# VIP
+def real_job_manager_load_jobs(request):
+    # find all jobs
+
+    jobs_objects = Job.objects.all()
+    jobs_list = []
+    for job in jobs_objects:
+        job_dict = {
+            'job_number': job.job_number,
+            'is_approved': job.is_approved,
+            'job_title': job.job_title,
+            'job_content': job.job_content,
+            'salary': job.salary,
+            'feedback': job.feedback
+        }
+        jobs_list.append(job_dict)
+
+    return JsonResponse(jobs_list, safe=False)
 
 """
 APIs for company or Employer

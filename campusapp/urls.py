@@ -29,6 +29,7 @@ urlpatterns = [
     path('student_apply_for_job/<str:job_id>/<str:student_id>'
          , views.student_apply_for_job, name='student_apply_for_job'),
 
+#<- this point
     path('stu_admin_create_student/<str:stu_admin_id>'
          , views.stu_admin_create_student, name='stu_admin_create_student'),
 
@@ -53,8 +54,11 @@ urlpatterns = [
          , views.assists_admin_get_brief, name='assists_admin_get_brief'),
     path('student_update_infos/<str:student_id>', views.student_update_infos, name='student_update_infos'),
 
-    path('job_manager_load_jobs/<str:employer_id>'
+    path('job_manager_load_jobs/<str:job_manager_id>'
          , views.job_manager_load_jobs, name='job_manager_load_jobs'),
+
+    path('real_job_manager_load_jobs/'
+         , views.real_job_manager_load_jobs, name='real_job_manager_load_jobs'),
 
     path('assists_get_students/<str:major_name>'
          , views.assists_get_students, name='major_name'),
