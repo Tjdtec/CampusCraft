@@ -28,4 +28,7 @@ urlpatterns = [
 
     path('student_apply_for_job/<str:job_id>/<str:student_id>'
          ,views.student_apply_for_job, name='student_apply_for_job'),
+    
+    path('stu_admin_get_all_students/'
+         , views.stu_admin_get_all_students, name='stu_admin_get_all_students'),
 ]
