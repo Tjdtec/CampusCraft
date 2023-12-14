@@ -62,4 +62,7 @@ urlpatterns = [
 
     path('assists_get_students/<str:major_name>'
          , views.assists_get_students, name='major_name'),
+
+    path('get_students_for_job/<str:employer_id>/<str:job_number>',
+         views.get_students_for_job, name='get_students_for_job')
 ]
