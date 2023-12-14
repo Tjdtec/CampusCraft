@@ -183,11 +183,6 @@ APIs for 'Counselor' or 'Assists' or 'fu_dao_yuan'
 """
 
 def assists_get_brief(request, major_name):
-
-    # gathering informations of a given major(name).
-
-    # return a string like 
-
     """
     {
     "total_populations": "本专业总共有12人",       
@@ -199,8 +194,39 @@ def assists_get_brief(request, major_name):
     "three_or_more_jobs_populations": 34
     }
     """
+    if request.method == 'GET':
+        try:
+            total_populations = Student.objects.filter(major=major_name).count()
+            applied_populations = Student.objects.filter(major=major_name, jobs__isnull=False).distinct().count()
+            max_wage_obj = Job.objects.filter(student_job_fk__major=major_name).aggregate(Max('salary'))
+            min_wage_obj = Job.objects.filter(student_job_fk__major=major_name).aggregate(Min('salary'))
+            no_jobs_populations = Student.objects.filter(major=major_name, jobs__isnull=True).count()
+            one_or_two_jobs_populations = Student.objects.filter(major=major_name, jobs__isnull=False).annotate(
+                num_jobs=Count('jobs')).filter(num_jobs__lte=2).count()
+            three_or_more_jobs_populations = Student.objects.filter(major=major_name, jobs__isnull=False).annotate(
+                num_jobs=Count('jobs')).filter(num_jobs__gte=3).count()
 
-    pass
+            # Build a dictionary
+            data = {
+                "total_populations": f"本专业总共有{total_populations}人",
+                "applied_populations": f"共有{applied_populations}人参加勤工俭学工作",
+                "max_wage": f"收入最高的{max_wage_obj['salary__max']}$每月",
+                "min_wage": f"收入最低{min_wage_obj['salary__min']}$每月",
+                "no_jobs_populations": no_jobs_populations,
+                "one_or_two_jobs_populations": one_or_two_jobs_populations,
+                "three_or_more_jobs_populations": three_or_more_jobs_populations
+            }
+
+            # return Json
+            return JsonResponse(data, safe=False)
+        
+        except Exception as e:
+                # Print the exception message for debugging
+                print(f"Exception: {str(e)}")
+                # Reraise the exception to get more details in the console or Django error page
+                raise e
+    else:
+        return JsonResponse({'error': 'WTF?'}, status=405) 
 
 #VIP
 def assists_get_students(request, major_name):
