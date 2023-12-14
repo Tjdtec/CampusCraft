@@ -31,4 +31,7 @@ urlpatterns = [
     
     path('stu_admin_get_all_students/'
          , views.stu_admin_get_all_students, name='stu_admin_get_all_students'),
+
+    path('assists_get_brief/<str:major_name>'
+         , views.assists_get_brief, name='assists_get_brief')
 ]
