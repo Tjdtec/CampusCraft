@@ -52,6 +52,10 @@ urlpatterns = [
     path('assists_admin_get_brief/'
          , views.assists_admin_get_brief, name='assists_admin_get_brief'),
     path('student_update_infos/<str:student_id>', views.student_update_infos, name='student_update_infos'),
-    path('assists_get_students/<str:employee_id>', views.assists_get_students, name='assists_get_students'),
-    path('job_manager_load_jobs/<str:job_manager_id>', views.job_manager_load_jobs, name='job_manager_load_jobs'),
+
+    path('job_manager_load_jobs/<str:employer_id>'
+         , views.job_manager_load_jobs, name='job_manager_load_jobs'),
+
+    path('assists_get_students/<str:major_name>'
+         , views.assists_get_students, name='major_name'),
 ]

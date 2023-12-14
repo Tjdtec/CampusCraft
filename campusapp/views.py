@@ -246,25 +246,37 @@ def assists_get_brief(request, major_name):
 
 # VIP
 
+def assists_get_students(request, major_name):
+    """
+    Return a list of all students belonging to the given major.
+    """
+    if request.method == 'GET':
+        try:
+            # Query all students with the specified major
+            students = Student.objects.filter(major=major_name)
 
-def assists_get_students(request, employee_id):
-    # filter all students of a given major
-    counselor = Counselor.objects.get(employee_id=employee_id)
+            # Extract relevant information for each student
+            student_list = [
+                {
+                    'name': student.name,
+                    'contact_number': student.contact_number,
+                    'introduction': student.introduction,
+                    'major': student.major,
+                    'class_name': student.class_name,
+                    'student_id': student.student_id,
+                }
+                for student in students
+            ]
 
-    major_stu_objects = counselor.get_students()
-    major_stu_list = []
-    for major_stu in major_stu_objects:
-        major_stu_dict = {
-            'name': major_stu.name,
-            'contact_number': major_stu.contact_number,
-            'introduction': major_stu.introduction,
-            'major': major_stu.major,
-            'class_name': major_stu.class_name,
-            'student_id': major_stu.student_id
-        }
-        major_stu_list.append(major_stu_dict)
-
-    return JsonResponse(major_stu_list, safe=False)
+            # return Json
+            return JsonResponse(student_list, safe=False)
+        except Exception as e:
+            # Print the exception message for debugging
+            print(f"Exception: {str(e)}")
+            # Reraise the exception to get more details in the console or Django error page
+            raise e
+    else:
+        return JsonResponse({'error': 'WTF?'}, status=405)
 
 
 """
