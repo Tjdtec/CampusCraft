@@ -378,10 +378,19 @@ def job_manager_approve_job(request, job_manager_id, job_number):
 
 
 # VIP
-def job_manager_load_jobs(request, job_manager_id):
-    # find all jobs
+def job_manager_load_jobs(request, employer_id):
+    # find all jobs()
+    if request.method == 'GET':
+        # find the student obj according to this employer_id
+        try:
+            # B: find all jobs objs that are related to this manager
+            job_man = Employer.objects.get(employer_id = employer_id)
+            return JsonResponse(job_man_flow(job_man),safe=False)
+        except Employer.DoesNotExist:
+            return JsonResponse({'error': 'Invalid job_manager_id'}, status=400)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
 
-    pass
 
 
 """
