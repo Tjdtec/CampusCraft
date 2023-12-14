@@ -50,5 +50,8 @@ urlpatterns = [
          , views.assists_get_brief, name='assists_get_brief'),
 
     path('assists_admin_get_brief/'
-         , views.assists_admin_get_brief, name='assists_admin_get_brief')
+         , views.assists_admin_get_brief, name='assists_admin_get_brief'),
+
+    path('job_manager_load_jobs/<str:employer_id>'
+         , views.job_manager_load_jobs, name='job_manager_load_jobs'),
 ]
