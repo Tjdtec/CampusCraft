@@ -510,3 +510,28 @@ def submit_job_feedback(request, employer_id, job_number, job_feedback):
     response_data = {'message:': f'{employer.employer_name}: Feedback has been submitted'}
 
     return JsonResponse(response_data, status=200)
+
+
+
+
+def real_get_students_for_job(request, employer_id, job_number):
+    employers = Employer.objects.all()
+    for employer in employers:
+        try:
+            applied_students = employer.view_applied_students(job_number=job_number)
+        except Exception as e:
+            continue
+        applied_stu_list = []
+        if applied_students:
+            for stu in applied_students:
+                stu_dict = {
+                    'name': stu.name,
+                    'contact_number': stu.contact_number,
+                    'introduction': stu.introduction,
+                    'major': stu.major,
+                    'class_name': stu.class_name,
+                    'student_id': stu.student_id
+                }
+                applied_stu_list.append(stu_dict)
+
+    return JsonResponse(applied_stu_list, safe=False)
