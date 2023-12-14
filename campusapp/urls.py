@@ -42,4 +42,13 @@ urlpatterns = [
 
     path('submit_job_feedback/<str:employer_id>/<str:job_number>/<str:job_feedback>',
          views.submit_job_feedback, name='submit_job_feedback'),
+
+    path('stu_admin_get_all_students/'
+         , views.stu_admin_get_all_students, name='stu_admin_get_all_students'),
+
+    path('assists_get_brief/<str:major_name>'
+         , views.assists_get_brief, name='assists_get_brief'),
+
+    path('assists_admin_get_brief/'
+         , views.assists_admin_get_brief, name='assists_admin_get_brief')
 ]

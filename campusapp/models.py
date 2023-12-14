@@ -83,7 +83,7 @@ class Student(models.Model):
         job = Job.objects.get(job_number='example_job_number')
         student.apply_for_job(job)
         """
-        self.job_set.add(job)
+        self.jobs.add(job)
 
     def view_student_info(self):
         """
@@ -109,7 +109,7 @@ class Student(models.Model):
         for job in applied_jobs:
             print(job.job_title)
         """
-        return self.job_set.all()
+        return self.jobs.all()
 
     def view_approved_jobs(self):
         """
@@ -218,7 +218,7 @@ class Job(models.Model):
     job.save()
     print(job)
     """
-    student_job_fk = models.ManyToManyField(Student, blank=True)
+    student_job_fk = models.ManyToManyField(Student, related_name = "jobs", blank=True)
     job_number = models.CharField(max_length=10, unique=True)
     is_approved = models.BooleanField(default=False)
     job_title = models.CharField(max_length=100)
