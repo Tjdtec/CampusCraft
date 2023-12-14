@@ -116,6 +116,7 @@ def stu_flow():
             'contact_number': stu.contact_number,
             'introduction': stu.introduction,
             'class_name': stu.class_name,
+            'major':stu.major
             # Add other fields as needed
         }
         stu_list.append(stu_dict)
