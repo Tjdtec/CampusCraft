@@ -219,7 +219,7 @@ class Job(models.Model):
     job.save()
     print(job)
     """
-    student_job_fk = models.ManyToManyField(Student, related_name = "jobs", blank=True)
+    student_job_fk = models.ManyToManyField(Student, related_name="jobs", blank=True)
     job_number = models.CharField(max_length=10, unique=True)
     is_approved = models.BooleanField(default=False)
     job_title = models.CharField(max_length=100)
@@ -312,15 +312,15 @@ class Employer(models.Model):
         """
         return Student.objects.all()
 
-    def view_applied_students(self):
+    def view_applied_students(self, job_number):
         """
         用人单位可以查看投递了自己发布的所有工作岗位的学生
         参数 job__in 是 Django ORM 的查询语法之一，用于查询与某个关联模型的外键关系中包含
         在给定列表或查询集中的对象。在这里，job__in 用于查询与 Job 模型的外键关联中包含在
         jobs 列表中的对象。
         """
-        jobs = self.jobs_em_fk_2.all()
-        students = Student.objects.filter(job__in=jobs)
+        jobs = self.jobs_em_fk_2.get(job_number=job_number)
+        students = Student.objects.filter(jobs=jobs)
         return students
 
     def view_all_jobs(self):

@@ -468,6 +468,24 @@ def make_new_job(request, employer_id):
         return JsonResponse(response_data, status=405)
 
 
+def get_students_for_job(request, employer_id, job_number):
+    employer = Employer.objects.get(employer_id=employer_id)
+    applied_students = employer.view_applied_students(job_number=job_number)
+    applied_stu_list = []
+    for stu in applied_students:
+        stu_dict = {
+            'name': stu.name,
+            'contact_number': stu.contact_number,
+            'introduction': stu.introduction,
+            'major': stu.major,
+            'class_name': stu.class_name,
+            'student_id': stu.student_id
+        }
+        applied_stu_list.append(stu_dict)
+
+    return JsonResponse(applied_stu_list, safe=False)
+
+
 def submit_job_feedback(request, employer_id, job_number, job_feedback):
     employer = Employer.objects.get(employer_id=employer_id)
     employer.provide_feedback(feedback_text=job_feedback, job_number=job_number)
