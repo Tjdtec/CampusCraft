@@ -266,15 +266,11 @@ def stu_admin_get_all_students(request):
     else:
       return JsonResponse({'error': 'Invalid request method'}, status=405)  
 
+
 def assists_admin_get_brief(request):
-
-    # gathering informations of all students.
-
-    # return a string like 
-
     """
     {
-    "total_populations": "本专业总共有12人",       
+    "total_populations": "学生总共有12人",       
     "applied_populations": "共有8人参加勤工俭学工作",        
     "max_wage": "收入最高的1203$每月",
     "min_wage": "收入最低45$每月。"
@@ -283,8 +279,39 @@ def assists_admin_get_brief(request):
     "three_or_more_jobs_populations": 34
     }
     """
+    if request.method == 'GET':
+        try:
+            total_populations = Student.objects.count()
+            applied_populations = Student.objects.filter(jobs__isnull=False).distinct().count()
+            max_wage_obj = Job.objects.aggregate(Max('salary'))
+            min_wage_obj = Job.objects.aggregate(Min('salary'))
+            no_jobs_populations = Student.objects.filter(jobs__isnull=True).count()
+            one_or_two_jobs_populations = Student.objects.annotate(
+                num_jobs=Count('jobs')).filter(num_jobs__lte=2).count()
+            three_or_more_jobs_populations = Student.objects.annotate(
+                num_jobs=Count('jobs')).filter(num_jobs__gte=3).count()
 
-    pass
+            # Build a dictionary
+            data = {
+                "total_populations": f"学生总共有{total_populations}人",
+                "applied_populations": f"共有{applied_populations}人参加勤工俭学工作",
+                "max_wage": f"收入最高的{max_wage_obj['salary__max']}$每月",
+                "min_wage": f"收入最低{min_wage_obj['salary__min']}$每月",
+                "no_jobs_populations": no_jobs_populations,
+                "one_or_two_jobs_populations": one_or_two_jobs_populations,
+                "three_or_more_jobs_populations": three_or_more_jobs_populations
+            }
+
+            # return Json
+            return JsonResponse(data, safe=False)
+        
+        except Exception as e:
+            # Print the exception message for debugging
+            print(f"Exception: {str(e)}")
+            # Reraise the exception to get more details in the console or Django error page
+            raise e
+    else:
+        return JsonResponse({'error': 'WTF?'}, status=405)
 
 
 
