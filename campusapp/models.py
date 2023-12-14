@@ -121,13 +121,14 @@ class Student(models.Model):
         """
         return Job.objects.filter(is_approved=True)
 
-    def modify_introduction(self, new_introduction):
+    def modify_introduction(self, new_introduction, new_contact):
         """
         学生修改自己简介信息的方法
         使用样例:
         student.modify_introduction(new_introduction='New introduction text.')
         """
         self.introduction = new_introduction
+        self.contact_number = new_contact
         self.save()
 
     def __str__(self):

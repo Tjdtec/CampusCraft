@@ -163,11 +163,23 @@ def student_load_unrelated_jobs(request, student_id):
         return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
-def student_update_infos(request, student_id, student_json):
+def student_update_infos(request, student_id):
     # find student objs according to student_id
-
-    # call update self_infos
-    pass
+    if request.method == 'POST':
+        try:
+            stu_json = json.loads(request.body)
+            new_introduction = stu_json.get("introduction")
+            new_contact = stu_json.get("contact_number")
+            student = Student.objects.get(student_id=student_id)
+            # call the student's function to modify introduction
+            student.modify_introduction(new_introduction=new_introduction, new_contact=new_contact)
+            response_data = {'message': 'Successful changed the introduction...'}
+            return JsonResponse(response_data, status=200)
+        except json.JSONDecodeError:
+            response_data = {'error': 'Wrong load in json...'}
+            return JsonResponse(response_data, status=400)
+    else:
+        return JsonResponse({'error': 'request is not post..'})
 
 
 def student_apply_for_job(request, job_id, student_id):
@@ -235,12 +247,24 @@ def assists_get_brief(request, major_name):
 # VIP
 
 
-def assists_get_students(request, major_name):
+def assists_get_students(request, employee_id):
     # filter all students of a given major
+    counselor = Counselor.objects.get(employee_id=employee_id)
 
-    # return student list
+    major_stu_objects = counselor.get_students()
+    major_stu_list = []
+    for major_stu in major_stu_objects:
+        major_stu_dict = {
+            'name': major_stu.name,
+            'contact_number': major_stu.contact_number,
+            'introduction': major_stu.introduction,
+            'major': major_stu.major,
+            'class_name': major_stu.class_name,
+            'student_id': major_stu.student_id
+        }
+        major_stu_list.append(major_stu_dict)
 
-    pass
+    return JsonResponse(major_stu_list, safe=False)
 
 
 """
@@ -380,8 +404,22 @@ def job_manager_approve_job(request, job_manager_id, job_number):
 # VIP
 def job_manager_load_jobs(request, job_manager_id):
     # find all jobs
+    job_manager = Employer.objects.get(employer_id=job_manager_id)
 
-    pass
+    jobs_objects = job_manager.view_all_jobs()
+    jobs_list = []
+    for job in jobs_objects:
+        job_dict = {
+            'job_number': job.job_number,
+            'is_approved': job.is_approved,
+            'job_title': job.job_title,
+            'job_content': job.job_content,
+            'salary': job.salary,
+            'feedback': job.feedback
+        }
+        jobs_list.append(job_dict)
+
+    return JsonResponse(jobs_list, safe=False)
 
 
 """
