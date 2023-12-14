@@ -83,7 +83,7 @@ class Student(models.Model):
         job = Job.objects.get(job_number='example_job_number')
         student.apply_for_job(job)
         """
-        self.job_set.add(job)
+        self.jobs.add(job)
 
     def view_student_info(self):
         """
@@ -109,7 +109,7 @@ class Student(models.Model):
         for job in applied_jobs:
             print(job.job_title)
         """
-        return self.job_set.all()
+        return self.jobs.all()
 
     def view_approved_jobs(self):
         """
