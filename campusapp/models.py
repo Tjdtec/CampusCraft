@@ -187,9 +187,9 @@ class Counselor(models.Model):
     def get_students(self):
         # 获取与该辅导员专业相同的学生
         return Student.objects.filter(major=self.major)
-    
+
     def view_counselor_info(self):
-        return{
+        return {
             "employee_id": self.employee_id,
             "major": self.major,
             "name": self.name
@@ -342,10 +342,9 @@ class Employer(models.Model):
 
     def __str__(self):
         return f"{self.employer_name} ({self.employer_id})"
-    
 
     def view_employer_info(self):
-        return{
+        return {
 
             "employer_id": self.employer_id,
             "employer_name": self.employer_name,
@@ -395,7 +394,8 @@ class WorkStudyAdmin(models.Model):
            """
         try:
             # 尝试通过用户名和密码查找辅导员
-            login_record = Login.objects.get(user_name=username, user_password=password, user_type=Login.WORK_STUDY_ADMIN)
+            login_record = Login.objects.get(user_name=username, user_password=password,
+                                             user_type=Login.WORK_STUDY_ADMIN)
             work_study_admin = cls.objects.get(work_admin_id=login_record.user_id)
             return work_study_admin
         except (Login.DoesNotExist, cls.DoesNotExist):
@@ -426,9 +426,9 @@ class WorkStudyAdmin(models.Model):
 
     def __str__(self):
         return f"{self.work_admin_name} ({self.work_admin_id})"
-    
+
     def view_work_study_admin_info(self):
-        return{
+        return {
             "work_admin_id": self.work_admin_id,
             "work_admin_name": self.work_admin_name
         }
@@ -448,8 +448,8 @@ class StudentAffair(models.Model):
     - view_all_students_info(self): 学生处管理员查看所有学生信息的方法。
     - get_students_statistics(self): 学生处管理员获取全体学生的统计信息的方法。
     - get_income_statistics(self): 学生处管理员获取参加勤工俭学学生的收入统计信息的方法。
-    - add_student(self, name, gender, student_id): 学生处管理员添加学生的基本信息的方法。
-    - modify_student_info(self, student_id, new_name, new_gender): 学生处管理员修改学生基本信息的方法。
+    - add_student(self, name, contact_number, student_id, major, class_name): 学生处管理员添加学生的基本信息的方法。
+    - modify_student_info(self, name, contact_number, student_id, major, class_name): 学生处管理员修改学生基本信息的方法。
     - delete_student(self, student_id): 学生处管理员删除学生基本信息的方法。
 
     使用样例:
@@ -469,7 +469,8 @@ class StudentAffair(models.Model):
     income_statistics = logged_in_admin.get_income_statistics()
 
     # 添加学生信息
-    new_student = logged_in_admin.add_student(name='New Student', gender='Male', student_id='123456')
+    new_student = logged_in_admin.add_student(name='New Student', student_id='123456', major='CS', contact_number = '123456',
+                  class_name = 'cs101')
 
     # 修改学生信息
     modified_student = logged_in_admin.modify_student_info(student_id='123456', new_name='Modified Student', new_gender='Female')
@@ -491,7 +492,8 @@ class StudentAffair(models.Model):
            """
         try:
             # 尝试通过用户名和密码查找辅导员
-            login_record = Login.objects.get(user_name=username, user_password=password, user_type=Login.STUDENT_AFFAIRS)
+            login_record = Login.objects.get(user_name=username, user_password=password,
+                                             user_type=Login.STUDENT_AFFAIRS)
             stu_affair = cls.objects.get(stu_admin_id=login_record.user_id)
             return stu_affair
         except (Login.DoesNotExist, cls.DoesNotExist):
@@ -532,21 +534,24 @@ class StudentAffair(models.Model):
             'min_income': min_income,
         }
 
-    def add_student(self, name, gender, student_id):
+    def add_student(self, name, contact_number, student_id, major, class_name):
         """
         学生处添加学生的基本信息的方法
         """
-        student = Student.objects.create(name=name, gender=gender, student_id=student_id)
+        student = Student.objects.create(name=name, contact_number=contact_number, student_id=student_id, major=major,
+                                         class_name=class_name)
         return student
 
-    def modify_student_info(self, student_id, new_name, new_gender):
+    def modify_student_info(self, name, contact_number, student_id, major, class_name):
         """
         学生处修改学生基本信息的方法
         """
         try:
             student = Student.objects.get(student_id=student_id)
-            student.name = new_name
-            student.gender = new_gender
+            student.name = name
+            student.contact_number = contact_number
+            student.major = major
+            student.class_name = class_name
             student.save()
             return True
         except Student.DoesNotExist:
@@ -564,7 +569,7 @@ class StudentAffair(models.Model):
             return False
 
     def view_student_affair_info(self):
-        return{
+        return {
             'stu_admin_id': self.stu_admin_id,
             'stu_admin_name': self.stu_admin_name
         }

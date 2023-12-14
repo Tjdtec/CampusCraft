@@ -9,6 +9,7 @@ import json
 from .models import Login, StudentAffair, WorkStudyAdmin, Employer, Student, Counselor, Job
 from django.http import JsonResponse
 
+
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
@@ -42,48 +43,49 @@ def login(request):
                 work_study_admin_info = work_study_admin.view_work_study_admin_info()
                 work_study_admin_info["role"] = "work_study_admin"
                 return JsonResponse(work_study_admin_info)
-            
+
             return JsonResponse({'error': 'no match'}, status=400)
-            
+
         except Login.DoesNotExist:
             return JsonResponse({'error': 'Invalid shits'}, status=400)
     else:
-        return JsonResponse({'error': 'WTF?'}, status=405) 
+        return JsonResponse({'error': 'WTF?'}, status=405)
+
 
 """
 General APIs
 """
 
-# Pass-in IDs into these motherfuckers 
+
+# Pass-in IDs into these motherfuckers
 # next, according to that, return the information of that shit
 
 def student_load_infos(request, id):
-
     student = Student.objects.get(student_id=id)
     return JsonResponse(student.view_student_info())
 
-def counselor_load_infos(request, id):
 
+def counselor_load_infos(request, id):
     counselor = Counselor.objects.get(employee_id=id)
     return JsonResponse(counselor.view_counselor_info())
 
-def employer_load_infos(request, id):
 
+def employer_load_infos(request, id):
     employer = Employer.objects.get(employer_id=id)
     return JsonResponse(employer.view_employer_info())
 
-def student_affair_load_infos(request, id):
 
+def student_affair_load_infos(request, id):
     student_affair = StudentAffair.objects.get(stu_admin_id=id)
     return JsonResponse(student_affair.view_student_affair_info())
 
-def work_study_admin_load_infos(request, id):
 
+def work_study_admin_load_infos(request, id):
     work_study_admin = WorkStudyAdmin.objects.get(work_admin_id=id)
     return JsonResponse(work_study_admin.view_work_study_admin_info())
 
-def job_flow(stu = None):
 
+def job_flow(stu=None):
     if stu is None:
         job_objects = Job.objects.all()
     else:
@@ -108,6 +110,8 @@ def job_flow(stu = None):
 """
 APIs for students
 """
+
+
 def student_load_related_jobs(request, student_id):
     if request.method == 'GET':
         # find the student obj according to this student_id
@@ -118,7 +122,7 @@ def student_load_related_jobs(request, student_id):
         except Student.DoesNotExist:
             return JsonResponse({'error': 'Invalid student_id'}, status=400)
     else:
-        return JsonResponse({'error': 'Invalid request method'}, status=405) 
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
 def student_load_unrelated_jobs(request, student_id):
@@ -137,11 +141,10 @@ def student_load_unrelated_jobs(request, student_id):
         except Student.DoesNotExist:
             return JsonResponse({'error': 'Invalid student_id'}, status=400)
     else:
-        return JsonResponse({'error': 'Invalid request method'}, status=405) 
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
 def student_update_infos(request, student_id, student_json):
-
     # find student objs according to student_id
 
     # call update self_infos
@@ -149,25 +152,22 @@ def student_update_infos(request, student_id, student_json):
 
 
 def student_apply_for_job(request, job_id, student_id):
-
     # find student obj according to student_id
     stu = Student.objects.get(student_id=student_id)
     # find job obj according to job_id
     job = Job.objects.get(job_number=job_id)
     # call job's insert_student function
     stu.apply_for_job(job)
-    return JsonResponse({'success':'happy~'})
+    return JsonResponse({'success': 'happy~'})
 
 
-    
-    
 """
 APIs for 'Counselor' or 'Assists' or 'fu_dao_yuan'
 """
 
-def assists_get_brief(request, major_name):
 
-    # gathering informations of a given major(name).
+def assists_get_brief(request, major_name):
+    # gathering information of a given major(name).
 
     # return a string like 
 
@@ -185,9 +185,9 @@ def assists_get_brief(request, major_name):
 
     pass
 
-#VIP
+
+# VIP
 def assists_get_students(request, major_name):
-    
     # filter all students of a given major
 
     # return student list
@@ -199,28 +199,71 @@ def assists_get_students(request, major_name):
 APIs for StuAdmins or StudentAffair
 """
 
+
 # def stu_admin_update_student_info():
 #  Okay.... just reuse the Student's student_update_infos() function
 
 
-#VIP
-def stu_admin_create_student(request, student_json):
+# VIP
+def stu_admin_create_student(request, stu_admin_id):
+    # just like its name says....
+    if request.method == 'POST':
+        try:
+            student_json = json.loads(request.body)
+            stu_name = student_json.get('name')
+            stu_contact_number = student_json.get('contact_number')
+            stu_major = student_json.get('major')
+            stu_class_name = student_json.get('class_name')
+            stu_id = student_json.get('student_id')
+            stu_admin = StudentAffair.objects.get(stu_admin_id=stu_admin_id)
+            stu_admin.add_student(name=stu_name, contact_number=stu_contact_number, major=stu_major,
+                                  class_name=stu_class_name, student_id=stu_id)
+            response_data = {'message': f'{stu_admin.stu_admin_name}: Student created successfully'}
+            return JsonResponse(response_data, status=200)
+        except json.JSONDecodeError:
+            response_data = {'error': 'Invalid JSON data'}
+            return JsonResponse(response_data, status=400)
+    else:
+        response_data = {'error': 'Invalid JSON data'}
+        return JsonResponse(response_data, status=404)
 
-    # just like it's name says....
 
-    pass
+def stu_admin_modify_student(request, stu_admin_id):
+    if request.method == 'POST':
+        try:
+            modify_stu_json = json.loads(request.body)
+            stu_name = modify_stu_json.get('name')
+            stu_contact_number = modify_stu_json.get('contact_number')
+            stu_major = modify_stu_json.get('major')
+            stu_class_name = modify_stu_json.get('class_name')
+            stu_id = modify_stu_json.get('student_id')
+            # Get the stu_admin object by the stu_admin_id
+            stu_admin = StudentAffair.objects.get(stu_admin_id=stu_admin_id)
+            stu_admin.modify_student_info(name=stu_name, contact_number=stu_contact_number, major=stu_major,
+                                          class_name=stu_class_name, student_id=stu_id)
+            response_data = {'message': f'{stu_admin.stu_admin_name}: Student created successfully'}
 
+            return JsonResponse(response_data, status=200)
+        except json.JSONDecodeError:
+            response_data = {'error': 'Invalid JSON data'}
+            return JsonResponse(response_data, status=400)
+        finally:
+            response_data = {'error': 'Invalid  stu_admin_id'}
+            return JsonResponse(response_data, status=401)
+
+    else:
+        response_data = {'error': 'Invalid JSON data'}
+        return JsonResponse(response_data, status=405)
 
 
 def stu_admin_get_all_students(request):
-
     # return all students (we don't care majors here)
 
     pass
 
-def assists_admin_get_brief(request):
 
-    # gathering informations of all students.
+def assists_admin_get_brief(request):
+    # gathering information of all students.
 
     # return a string like 
 
@@ -239,37 +282,64 @@ def assists_admin_get_brief(request):
     pass
 
 
-
 """
 APIs for JobManagers or WorkStudyAdmin
 """
 
+
 def job_manager_approve_job(request, job_manager_id, job_number):
-
     # find job manager's obj according to job_manager_id
-
+    work_admin = WorkStudyAdmin.objects.get(work_admin_id=job_manager_id)
     # call job manager's approve_job(cls, job_number)
+    work_admin.approve_job(job_number=job_number)
+    response_data = {'message:': f'{work_admin.work_admin_name}: A new job has been approved!'}
+    return JsonResponse(response_data, status=200)
 
-    pass
 
-#VIP
-def job_manager_load_jobs(request,job_manager_id):
-
+# VIP
+def job_manager_load_jobs(request, job_manager_id):
     # find all jobs
 
     pass
-
 
 
 """
 APIs for company or Employer
 """
 
-#VIP
-def make_new_job(request,job_json):
 
-    pass
+# VIP
+def make_new_job(request, employer_id):
+    if request.method == 'POST':
+        try:
+            job_json = json.loads(request.body)
+            job_number = job_json.get('job_number')
+            job_title = job_json.get('job_title')
+            job_content = job_json.get('job_content')
+            job_salary = job_json.get('salary')
+            job_dict = {
+                'job_number': job_number,
+                'job_title': job_title,
+                'job_content': job_content,
+                'salary': job_salary
+            }
+            # Create an employer case to make a new job
+            employer = Employer.objects.get(employer_id=employer_id)
+            employer.create_job(job_dict)
+            response_data = {'message': f'{employer.employer_name}: New job was successfully release!'}
+
+            return JsonResponse(response_data, status=200)
+        except json.JSONDecodeError:
+            response_data = {'error': 'Invalid JSON data'}
+            return JsonResponse(response_data, status=400)
+    else:
+        response_data = {'error': 'Invalid JSON data'}
+        return JsonResponse(response_data, status=405)
 
 
+def submit_job_feedback(request, employer_id, job_number, job_feedback):
+    employer = Employer.objects.get(employer_id=employer_id)
+    employer.provide_feedback(feedback_text=job_feedback, job_number=job_number)
+    response_data = {'message:': f'{employer.employer_name}: Feedback has been submitted'}
 
-
+    return JsonResponse(response_data, status=200)
