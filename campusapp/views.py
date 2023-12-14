@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from .models import Login, StudentAffair, WorkStudyAdmin, Employer, Student, Counselor, Job
 from django.http import JsonResponse
+from django.db.models import Count, Max, Min
 
 @csrf_exempt
 def login(request):
@@ -104,6 +105,21 @@ def job_flow(stu = None):
         job_list.append(job_dict)
     return job_list
 
+def stu_flow():
+    stu_objects = Student.objects.all()
+
+    stu_list = []
+    for stu in stu_objects:
+        stu_dict = {
+            'student_id': stu.student_id,
+            'name': stu.name,
+            'contact_number': stu.contact_number,
+            'introduction': stu.introduction,
+            'class_name': stu.class_name,
+            # Add other fields as needed
+        }
+        stu_list.append(stu_dict)
+    return stu_list
 
 """
 APIs for students
@@ -213,10 +229,15 @@ def stu_admin_create_student(request, student_json):
 
 
 def stu_admin_get_all_students(request):
-
     # return all students (we don't care majors here)
-
-    pass
+    if request.method == 'GET':
+        # find all the student obj 
+        try:
+            return JsonResponse(stu_flow(), safe=False)
+        except Student.DoesNotExist:
+            return JsonResponse({'error': 'Invalid student_id'}, status=400)
+    else:
+      return JsonResponse({'error': 'Invalid request method'}, status=405)  
 
 def assists_admin_get_brief(request):
 
